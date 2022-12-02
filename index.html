@@ -113,8 +113,8 @@
 					<div class="mb-4" id="key">C</div>
 
 					<div class="form-switch text-center">
-						<input class="form-check-input" type="checkbox" id="enableSpeech">
-						<label class="form-check-label" for="enableSpeech">Enable Speech</label>
+						<input class="form-check-input" type="checkbox" id="enableSpeech">&nbsp;
+						<label class="form-check-label" for="enableSpeech">enable audio</label>
 					</div>
 				</div>
 			</div>
@@ -188,6 +188,8 @@
 					
 					document.getElementById("toggleLobbing").innerHTML = "Stop Lobbing";
 					document.getElementById("keyInterval").disabled = true;
+					document.getElementById("toggleLobbing").classList.remove("btn-primary");
+					document.getElementById("toggleLobbing").classList.add("btn-danger");
 				}
 
 				let bgTimer;
@@ -227,6 +229,8 @@
 					document.getElementById("toggleLobbing").innerHTML = "Start Lobbing";
 					document.getElementById("keyInterval").disabled = false;
 					document.getElementById("key").style.backgroundSize = "0% 100%";
+					document.getElementById("toggleLobbing").classList.add("btn-primary");
+					document.getElementById("toggleLobbing").classList.remove("btn-danger");
 				}
 
 				let currentKey = ["C", "C"];
