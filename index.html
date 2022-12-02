@@ -10,26 +10,22 @@
 		<title>Heroes · Bootstrap v5.0</title>
 
 		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+			href="bootstrap.min.css"
 			rel="stylesheet"
 			integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 			crossorigin="anonymous">
-
 		<meta name="theme-color" content="#7952b3">
 
 		<style>
+			body {
+				padding: 24px;
+			}
 			.bd-placeholder-img {
 				font-size: 1.125rem;
 				text-anchor: middle;
 				-webkit-user-select: none;
 				-moz-user-select: none;
 				user-select: none;
-			}
-
-			@media (min-width: 768px) {
-				.bd-placeholder-img-lg {
-					font-size: 3.5rem;
-				}
 			}
 
 			.b-example-divider {
@@ -43,6 +39,7 @@
 				font-size: 96px;
 				text-align: center;
 				width: 200px;
+				height: 160px;
 				border: 1px solid black;
 				margin-top: 24px;
 				background-image: url('bg.png');
@@ -50,24 +47,35 @@
 				background-size: 0% 100%;
 			}	
 		
-			@media (min-width: 992px) {
-			.rounded-lg-3 { border-radius: .3rem; }
+			@media screen and (max-width:1024px) and (orientation:landscape) {
+				body {
+					padding: 4px;								
+				}
+				.mb-4 {
+					margin-bottom: 0.5rem!important;
+				}
+				#key {
+					font-size: 74px;
+					width: 200px;
+					height: 128px;
+					margin-top: 6px;
+				}
 			}
 
 		</style>
 	</head>
 	<body>
 
-		<main>
+		<div class="d-flex flex-column align-items-center">
+			<form class="d-flex flex-column align-items-center">
 
-			<div class="px-4 pt-5 my-5 text-center border-bottom">
-				<h1 class="display-4 fw-bold">Key Lobber</h1>
-				<div class="col-lg-6 mx-auto">
-					<p class="lead mb-4">Selects random musical keys at a given interval to aid
-						in practicing</p>
-					<div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-						<select id="keyInterval" class="form-select" aria-label="Default select
-							example" style="width:80px;">
+				<h1 class="display-4 fw-bold mb-4">Key Lobber</h1>
+
+				<p class="lead mb-4">Picks random musical keys at a given interval</p>
+
+				<div class="row mb-4" style="width:fit-content">
+					<div class="col-auto">
+						<select id="keyInterval" class="form-select">
 							<option value="2">2</option>
 							<option value="3">3</option>
 							<option value="4">4</option>
@@ -85,44 +93,50 @@
 							<option value="50">50</option>
 							<option value="60">60</option>
 						</select>
-						<button type="button" id="start-lobbing" class="btn btn-primary btn-lg
-							px-4 me-sm-3">Start
-							Lobbing</button>
-						<button type="button" id="stop-lobbing" class="btn btn-outline-secondary
-							btn-lg px-4" disabled>Stop
-							Lobbing</button>
 					</div>
-					<div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5
-						form-switch">
-						<input class="form-check-input " type="checkbox" id="enableSpeech">
+					<div class="col-auto mt-1">
+						<span class="form-text">
+							seconds between each key
+						</span>
+					</div>
+				</div>
+
+				<div class="mb-4">
+					<button type="button" id="toggleLobbing" class="btn btn-primary btn-lg">Start
+						Lobbing</button>
+				</div>
+
+			</form>
+
+			<div class="position-relative">
+				<div class="position-absolute start-50 translate-middle-x">
+					<div class="mb-4" id="key">C</div>
+
+					<div class="form-switch text-center">
+						<input class="form-check-input" type="checkbox" id="enableSpeech">
 						<label class="form-check-label" for="enableSpeech">Enable Speech</label>
 					</div>
 				</div>
-				<div class="container px-5">
-					<div class="position-absolute start-50 translate-middle-x" id="key">C</div>
-				</div>
 			</div>
-
-		</main>
-
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-			crossorigin="anonymous"></script>
+		</div>
 
 		<script>
-				// setup click handler for start-lobbing
-				document.getElementById("start-lobbing").addEventListener("click", function() {
-					// get the key interval
-					var keyInterval = document.getElementById("keyInterval").value;
-					// start the key lobber
-					startKeyLobber(keyInterval);
-				});
+			let isLobbing = false;
 
-				//setup click handler for stop-lobbing
-				document.getElementById("stop-lobbing").addEventListener("click", function() {
-					// stop the key lobber
-					stopKeyLobber();
+				// setup click handler for start-lobbing
+				document.getElementById("toggleLobbing").addEventListener("click", function() {
+
+					if (isLobbing) {
+						stopKeyLobber();
+						isLobbing = false;
+					}
+					else {
+						// get the key interval
+						var keyInterval = document.getElementById("keyInterval").value;
+						// start the key lobber
+						startKeyLobber(keyInterval);
+						isLobbing = true;
+					}
 				});
 
 				//when we change the key interval, save the value to local storage
@@ -172,9 +186,7 @@
 						getKey(intervalSeconds * 1000)
 					}, intervalSeconds * 1000);
 					
-					// lock the UI
-					document.getElementById("stop-lobbing").disabled = false;
-					document.getElementById("start-lobbing").disabled = true;
+					document.getElementById("toggleLobbing").innerHTML = "Stop Lobbing";
 					document.getElementById("keyInterval").disabled = true;
 				}
 
@@ -188,7 +200,8 @@
 
 					if (document.getElementById("enableSpeech").checked) {
 						let utterance = new SpeechSynthesisUtterance(key[1]);
-						utterance.pitch = 1.4;
+						utterance.pitch = 1.3;
+						utterance.rate = 0.7;
 						speechSynthesis.speak(utterance);
 					}
 
@@ -211,11 +224,8 @@
 					clearInterval(timer);
 					clearInterval(bgTimer);
 					
-					//reset UI
-					document.getElementById("stop-lobbing").disabled = true;
-					document.getElementById("start-lobbing").disabled = false;
+					document.getElementById("toggleLobbing").innerHTML = "Start Lobbing";
 					document.getElementById("keyInterval").disabled = false;
-
 					document.getElementById("key").style.backgroundSize = "0% 100%";
 				}
 
@@ -244,7 +254,6 @@
 					currentKey = nextKey;
 					return currentKey;
 				}
-				
-			</script>
+		</script>
 	</body>
 </html>
