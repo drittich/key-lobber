@@ -3,336 +3,74 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="">
-		<meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap
-			contributors">
-		<meta name="generator" content="Hugo 0.84.0">
-		<title>Heroes · Bootstrap v5.0</title>
-
-		<link
-			href="bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-			crossorigin="anonymous">
-		<meta name="theme-color" content="#7952b3">
-
-		<style>
-			body {
-				padding: 24px;
-			}
-			.bd-placeholder-img {
-				font-size: 1.125rem;
-				text-anchor: middle;
-				-webkit-user-select: none;
-				-moz-user-select: none;
-				user-select: none;
-			}
-
-			.b-example-divider {
-				height: 3rem;
-				background-color: rgba(0, 0, 0, .1);
-				border: solid rgba(0, 0, 0, .15);
-				border-width: 1px 0;
-				box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-			}
-			#key {
-				font-size: 96px;
-				text-align: center;
-				width: 200px;
-				height: 160px;
-				border: 1px solid black;
-				margin-top: 24px;
-				background-image: url('bg.png');
-				background-repeat: no-repeat;
-				background-size: 0% 100%;
-				margin-left: 54px;
-			}	
-		
-			@media screen and (max-width:1024px) and (orientation:landscape) {
-				body {
-					padding: 4px;								
-				}
-				.mb-4 {
-					margin-bottom: 0.5rem!important;
-				}
-				#key {
-					font-size: 74px;
-					width: 200px;
-					height: 128px;
-					margin-top: 6px;
-				}
-			}
-
-		</style>
+		<title>Key Lobber</title>
 	</head>
 	<body>
+		<main class="container">
+			<h1>Key <span>Lobber</span></h1>
 
-		<div class="d-flex flex-column align-items-center">
-			<form class="d-flex flex-column align-items-center">
+			<form>
 
-				<h1 class="display-4 fw-bold mb-4">Key Lobber</h1>
 
-				<p class="lead mb-4">Picks random musical keys at a given interval</p>
+				<label for="keyInterval">Seconds between each note: <b
+						id="keyIntervalValue">0</b>
+					<input type="range" min="1" max="60" value="15" id="keyInterval">
+				</label>
 
-				<div class="row mb-4" style="width:fit-content">
-					<div class="col-auto">
-						<select id="keyInterval" class="form-select">
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-							<option value="9">9</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
-							<option value="13">13</option>
-							<option value="14">14</option>
-							<option value="15">15</option>
-							<option value="16">16</option>
-							<option value="17">17</option>
-							<option value="18">18</option>
-							<option value="19">19</option>
-							<option value="20">20</option>
-							<option value="25">25</option>
-							<option value="30">30</option>
-							<option value="40">40</option>
-							<option value="50">50</option>
-							<option value="60">60</option>
-							<option value="80">80</option>
-							<option value="100">100</option>
-							<option value="120">120</option>
+				<div id="key"></div>
+				<progress value="1" max="1000" id="elapsedPerThousand"></progress>
+
+				<fieldset>
+					<label for="naturalNotes">
+						<input type="checkbox" id="naturalNotes" checked>
+						Include natural notes
+					</label>
+					<label for="flatNotes">
+						<input type="checkbox" id="flatNotes" checked>
+						Include flat notes
+					</label>
+					<label for="sharpNotes">
+						<input type="checkbox" id="sharpNotes" checked>
+						Include sharp notes
+					</label>
+				</fieldset>
+				<fieldset>
+					<div class="grid">
+						<label for="noteOrder">Note order
+							<select id="noteOrder">
+								<option value="ascending">Ascending</option>
+								<option value="descending">Descending</option>
+								<option value="random" selected>Random</option>
+							</select>
+						</label>
+						<div id="noteOrderSpacer"></div>
+						<label for="startNote" id="startNoteLabel">Starting note
+							<select id="startNote">
+							</select>
+						</label>
+					</div>
+				</fieldset>
+
+				<fieldset>
+					<label for="enableSpeech">
+						<input type="checkbox" id="enableSpeech">
+						Enable voice
+					</label>
+
+					<div class="grid">
+						<select id="voiceOptions">
 						</select>
+						<div></div>
 					</div>
-					<div class="col-auto mt-1">
-						<span class="form-text">
-							seconds between each key
-						</span>
-					</div>
-				</div>
+				</fieldset>
 
-				<div class="mb-4">
-					<button type="button" id="toggleLobbing" class="btn btn-primary btn-lg">Start
-						Lobbing</button>
-				</div>
-
+				<button type="button" style="margin-left: 25%;" id="toggleLobbing">Start Lobbing</button>
 			</form>
 
-			<div class="position-relative">
-				<div class="position-absolute start-50 translate-middle-x" style="width:5
-					00px">
-					<div class="mb-4" id="key">C</div>
+		</main>
+		<footer class="container">
+		</footer>
 
-					<div class="form-switch text-center">
-						<input class="form-check-input" type="checkbox" id="enableSpeech">&nbsp;
-						<label class="form-check-label" for="enableSpeech">enable audio</label>
-					</div>
-					<div class="row">
-						<div class="col-auto">
-							<label class="form-label" for="voiceOptions">Voice</label>
-						</div>
-						<div class="col-auto">
-							<select id="voiceOptions" class="form-select">
-							</select>&nbsp;
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<script>
-			let isLobbing = false;
-
-				// setup click handler for start-lobbing
-				document.getElementById("toggleLobbing").addEventListener("click", function() {
-
-					if (isLobbing) {
-						stopKeyLobber();
-						isLobbing = false;
-					}
-					else {
-						// get the key interval
-						var keyInterval = document.getElementById("keyInterval").value;
-						// start the key lobber
-						startKeyLobber(keyInterval);
-						isLobbing = true;
-					}
-				});
-
-				//when we change the key interval, save the value to local storage
-				document.getElementById("keyInterval").addEventListener("change", function() {
-					// get the key interval
-					var keyInterval = document.getElementById("keyInterval").value;
-					// save the key interval to local storage
-					localStorage.setItem("keyInterval", keyInterval);
-				});
-
-				// on page load, get the key interval from local storage and set the value
-				// of the keyInterval select
-				window.onload = function() {
-					// get the key interval from local storage
-					var keyInterval = localStorage.getItem("keyInterval");
-
-					if (keyInterval == null) {
-						keyInterval = 10;
-					}
-					// set the value of the keyInterval select
-					document.getElementById("keyInterval").value = keyInterval;
-
-					// on page load, get the enableSpeech value from local storage and set the
-					// value of the enableSpeech checkbox
-					var enableSpeech = localStorage.getItem("enableSpeech");
-
-					if (enableSpeech == null) {
-						enableSpeech = false;
-					}
-					document.getElementById("enableSpeech").checked = enableSpeech == "true";				
-					
-					// get the voice from local storage
-					let voice = localStorage.getItem("voice");
-
-					if (voice == null) {
-						voice = "Google US English";
-					}
-					// set the value of the voice select
-					document.getElementById("voiceOptions").value = voice;		
-				}
-
-				// when we enableSpeech checkbox, save the value to local storage
-				document.getElementById("enableSpeech").addEventListener("change", function() {
-					// get the enableSpeech value
-					var enableSpeech = document.getElementById("enableSpeech").checked;
-					// save the enableSpeech value to local storage
-					localStorage.setItem("enableSpeech", enableSpeech);
-				});
-
-				let timer;
-				function startKeyLobber(intervalSeconds) {
-					getKey(intervalSeconds * 1000)
-					
-					// set the timer
-					timer = setInterval(function() {
-						getKey(intervalSeconds * 1000)
-					}, intervalSeconds * 1000);
-					
-					document.getElementById("toggleLobbing").innerHTML = "Stop Lobbing";
-					document.getElementById("keyInterval").disabled = true;
-					document.getElementById("toggleLobbing").classList.remove("btn-primary");
-					document.getElementById("toggleLobbing").classList.add("btn-danger");
-				}
-
-				let voiceSelect = document.getElementById('voiceOptions');
-				// Fetch the list of voices and populate the voice options.
-				function loadVoices() {
-				// Fetch the available voices.
-					var voices = speechSynthesis.getVoices();
-				
-				// Loop through each of the voices.
-					voices.forEach(function(voice, i) {
-					// Create a new option element.
-						var option = document.createElement('option');
-					
-					// Set the options value and text.
-						option.value = voice.name;
-						option.innerHTML = voice.name;
-						
-					// Add the option to the voice selector.
-						voiceSelect.appendChild(option);
-					});
-				}				
-
-				// Execute loadVoices.
-				loadVoices();
-
-				// Chrome loads voices asynchronously.
-				window.speechSynthesis.onvoiceschanged = function(e) {
-				loadVoices();
-				};				
-
-				let bgTimer;
-				let elapsedMs = 0;
-				function getKey(intervalMs) {
-					clearInterval(bgTimer);
-					let key = getRandomKey();
-					document.getElementById("key").innerHTML = key[0];
-					elapsedMs = 0;
-
-					if (document.getElementById("enableSpeech").checked) {
-						let utterance = new SpeechSynthesisUtterance(key[1]);
-						utterance.pitch = 1;
-						utterance.rate = 1;
-
-						// If a voice has been selected, find the voice and set the
-						// utterance instance's voice attribute.
-						if (voiceSelect.value) {
-							utterance.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == voiceSelect.value; })[0];
-						}
-
-						speechSynthesis.speak(utterance);
-					}
-
-					
-					//slowly increase the background size until the next key is selected
-					let frameMs = 17;
-					bgTimer = setInterval(frame, frameMs);
-					function frame() {
-						if (elapsedMs >= intervalMs) {
-							clearInterval(bgTimer);
-						} else {
-							elapsedMs += frameMs;
-							document.getElementById("key").style.backgroundSize = Math.round((elapsedMs / intervalMs) * 100) + "% 100%";
-						}
-					}
-				}
-
-				//when we change the voice, save the value to local storage
-				voiceSelect.addEventListener("change", function() {
-					// get the voice value
-					let voice = document.getElementById("voiceOptions").value;
-					// save the voice value to local storage
-					localStorage.setItem("voice", voice);
-				});
-
-				function stopKeyLobber() {
-					// stop the timers
-					clearInterval(timer);
-					clearInterval(bgTimer);
-					
-					document.getElementById("toggleLobbing").innerHTML = "Start Lobbing";
-					document.getElementById("keyInterval").disabled = false;
-					document.getElementById("key").style.backgroundSize = "0% 100%";
-					document.getElementById("toggleLobbing").classList.add("btn-primary");
-					document.getElementById("toggleLobbing").classList.remove("btn-danger");
-				}
-
-				let currentKey = ["C", "C"];
-				function getRandomKey() {
-					var keys = [
-					['A', 'A'],
-					['Bb', '"B" flat'],
-					['B', 'B'],
-					['C', 'C'],
-					['Db', '"D" flat'],
-					['D', 'D'],
-					['Eb', '"E" flat'],
-					['E', 'E'],  
-					['F', 'F'],
-					['Gb', '"G" flat'],
-					['G', 'G'],
-					['Ab', '"A" flat']
-				];
-					let nextKey = null;
-					
-					do {
-						let randomIndex = Math.floor(Math.random() * keys.length);
-						nextKey = keys[randomIndex];
-					} while (nextKey[0] == currentKey[0]);
-					currentKey = nextKey;
-					return currentKey;
-				}
-		</script>
+		<script type="module" src="/src/main.ts"></script>
 	</body>
 </html>

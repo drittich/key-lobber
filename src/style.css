@@ -1,0 +1,51 @@
+body {
+
+	background-color: #131E26;
+}
+
+h1 span {
+	color: #1e88e5;
+}
+
+button {
+	width: 50%;
+}
+
+
+/* Blue Light scheme (Default) */
+/* Can be forced with data-theme="light" */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+	--primary: #1e88e5;
+	--primary-hover: #1976d2;
+	--primary-focus: rgba(30, 136, 229, 0.125);
+	--primary-inverse: #FFF;
+}
+
+/* Blue Dark scheme (Auto) */
+/* Automatically enabled if user has Dark mode enabled */
+@media only screen and (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--primary: #1e88e5;
+		--primary-hover: #2196f3;
+		--primary-focus: rgba(30, 136, 229, 0.25);
+		--primary-inverse: #FFF;
+	}
+}
+
+/* Blue Dark scheme (Forced) */
+/* Enabled if forced with data-theme="dark" */
+[data-theme="dark"] {
+	--primary: #1e88e5;
+	--primary-hover: #2196f3;
+	--primary-focus: rgba(30, 136, 229, 0.25);
+	--primary-inverse: #FFF;
+}
+
+/* Blue (Common styles) */
+:root {
+	--form-element-active-border-color: var(--primary);
+	--form-element-focus-color: var(--primary-focus);
+	--switch-color: var(--primary-inverse);
+	--switch-checked-background-color: var(--primary);
+}
