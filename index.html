@@ -12,28 +12,33 @@
 			<form>
 
 
-				<label for="keyInterval">Seconds between each note: <b
+				<label for="keyInterval" id="keyIntervalLabel">Seconds between each note: <b
 						id="keyIntervalValue">0</b>
 					<input type="range" min="1" max="60" value="15" id="keyInterval">
 				</label>
 
-				<div id="key"></div>
-				<progress value="1" max="1000" id="elapsedPerThousand"></progress>
-				<fieldset>
+				<article id="keyContainer" style="display: none; text-align: center;
+					width:50%; margin-left: 25%; background-color: rgb(17,25,31); border:1px
+					solid rgb(30,136,229)">
+					<div id="keyValue" style="font-size:72px;"></div>
+				</article>
+				<progress value="1" max="1000" id="elapsedPerThousand" style="display: none;
+					margin-bottom: 24px;"></progress>
+				<fieldset id="noteSelectionFieldset">
 					<label for="naturalNotes">
 						<input type="checkbox" id="naturalNotes" checked>
-						Include natural notes
+						Include naturals
 					</label>
 					<label for="flatNotes">
 						<input type="checkbox" id="flatNotes" checked>
-						Include flat notes
+						Include flats
 					</label>
 					<label for="sharpNotes">
 						<input type="checkbox" id="sharpNotes" checked>
-						Include sharp notes
+						Include sharps
 					</label>
 				</fieldset>
-				<fieldset>
+				<fieldset id="noteOrderFieldset">
 					<div class="grid">
 						<label for="noteOrder">Note order
 							<select id="noteOrder">
@@ -51,13 +56,13 @@
 				</fieldset>
 
 				<fieldset>
-					<label for="enableSpeech">
-						<input type="checkbox" id="enableSpeech">
+					<label for="enableSpeech" style="margin-bottom:12px;">
+						<input type="checkbox" id="enableSpeech" role="switch">
 						Enable voice
 					</label>
 
 					<div id="voiceOptionsContainer">
-						<div class="grid">
+						<div class="grid" id="voiceSelectContainer">
 							<select id="voiceOptions">
 							</select>
 							<div></div>

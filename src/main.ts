@@ -12,26 +12,27 @@ let naturalNotes = [
 ];
 
 let sharpNotes = [
-	['C#', 'C sharp']
-	, ['D#', 'D sharp']
-	, ['F#', 'F sharp']
-	, ['G#', 'G sharp']
-	, ['A#', '"A" sharp']
+	['C♯', 'C sharp']
+	, ['D♯', 'D sharp']
+	, ['F♯', 'F sharp']
+	, ['G♯', 'G sharp']
+	, ['A♯', '"A" sharp']
 ];
 
 let flatNotes = [
-	['Db', 'D flat']
-	, ['Eb', 'E flat']
-	, ['Gb', 'G flat']
-	, ['Ab', '"A" flat']
-	, ['Bb', 'B flat']
+	['D♭', 'D flat']
+	, ['E♭', 'E flat']
+	, ['G♭', 'G flat']
+	, ['A♭', '"A" flat']
+	, ['B♭', 'B flat']
 ];
 
 let isLobbing = false;
 
 let enableSpeechCheckboxEl = $('enableSpeech') as HTMLInputElement;
 let flatNotesCheckboxEl = $("flatNotes") as HTMLInputElement;
-let keyDisplayEl = $('key') as HTMLElement;
+let keyContainerEl = $('keyContainer') as HTMLElement;
+let keyValueEl = $('keyValue') as HTMLElement;
 let keyIntervalInputEl = $('keyInterval') as HTMLInputElement;
 let keyIntervalValueEl = $('keyIntervalValue') as HTMLElement;
 let naturalNotesCheckboxEl = $("naturalNotes") as HTMLInputElement;
@@ -45,21 +46,23 @@ let toggleLobbingButtonEl = $('toggleLobbing') as HTMLButtonElement;
 let voiceOptionsSelectEl = $('voiceOptions') as HTMLSelectElement;
 let volumeInputEl = $('volume') as HTMLInputElement;
 let volumeValueEl = $('volumeValue') as HTMLElement;
+let voiceOptionsContainerEl = $('voiceOptionsContainer') as HTMLElement;
 
 init();
 
 function init() {
 	loadVoices();
-	updateWithSavedSettings();
+	updateUiWithSavedSettings();
 	setupHandlers();
 }
 
-function updateWithSavedSettings() {
+function updateUiWithSavedSettings() {
 	getKeyIntervalFromLocalStorage();
 	getNoteSelectionFromLocalStorage();
 	getEnableAudioFromLocalStorage();
 	getNoteOrderFromLocalStorage();
 	populateStartNoteOptions();
+	getVolumeFromLocalStorage();
 }
 
 function loadVoices() {
@@ -85,7 +88,7 @@ function setupHandlers() {
 	//when enableSpeech is unchecked, hide the voiceOptions
 	enableSpeechCheckboxEl!.addEventListener('change', function () {
 		let checked = (this as HTMLInputElement).checked;
-		$('voiceOptionsContainer')!.style.display = checked ? 'block' : 'none';
+		voiceOptionsContainerEl.style.display = checked ? 'block' : 'none';
 		localStorage.setItem("enableSpeech", checked.toString());
 	});
 
@@ -150,6 +153,12 @@ function setupHandlers() {
 	volumeInputEl!.addEventListener('input', function () {
 		volumeValueEl!.innerHTML = Math.round(parseFloat(volumeInputEl.value) * 100).toString();
 	});
+
+	//when we change the volume, save the value to local storage
+	volumeInputEl!.addEventListener("change", function () {
+		let value = volumeInputEl.value;
+		localStorage.setItem("volume", value);
+	});
 }
 
 function getKeyIntervalFromLocalStorage() {
@@ -193,7 +202,7 @@ function getEnableAudioFromLocalStorage() {
 	if (checked == null)
 		checked = "false";
 	enableSpeechCheckboxEl.checked = checked == "true";
-	voiceOptionsSelectEl.style.display = checked == "true" ? 'block' : 'none';
+	voiceOptionsContainerEl.style.display = checked == "true" ? 'block' : 'none';
 }
 
 function getNoteOrderFromLocalStorage() {
@@ -203,6 +212,14 @@ function getNoteOrderFromLocalStorage() {
 	noteOrderSelectEl.value = noteOrder;
 	startNoteLabelEl!.style.display = noteOrder == "random" ? 'none' : 'block';
 	noteOrderSpacerEl!.style.display = noteOrder == "random" ? 'block' : 'none';
+}
+
+function getVolumeFromLocalStorage() {
+	let volume = localStorage.getItem('volume');
+	if (volume == null)
+		volume = "0.75";
+	volumeInputEl.value = volume;
+	volumeValueEl!.innerHTML = Math.round(parseFloat(volume) * 100).toString();
 }
 
 function getStartNoteFromLocalStorage() {
@@ -276,6 +293,7 @@ function getVoiceFromLocalStorage() {
 
 let timer: number;
 function startKeyLobber(intervalSeconds: number) {
+	showKey(true);
 	getKey(intervalSeconds * 1000)
 
 	// set the timer
@@ -289,6 +307,7 @@ function startKeyLobber(intervalSeconds: number) {
 }
 
 function stopKeyLobber() {
+	showKey(false);
 	// stop the timers
 	clearInterval(timer);
 	clearInterval(bgTimer);
@@ -303,7 +322,7 @@ let elapsedMs = 0;
 function getKey(intervalMs: number) {
 	clearInterval(bgTimer);
 	let key = getRandomKey();
-	keyDisplayEl.innerHTML = key[0];
+	keyValueEl.innerHTML = key[0];
 	elapsedMs = 0;
 
 	if (enableSpeechCheckboxEl.checked) {
@@ -344,6 +363,15 @@ function getRandomKey() {
 	} while (nextKey[0] == currentKey[0]);
 	currentKey = nextKey;
 	return currentKey;
+}
+
+function showKey(show:boolean) {
+	keyContainerEl.style.display = show ? 'block' : 'none';
+	$('keyIntervalLabel')!.style.display = show ? 'none': 'block' ;
+	$('noteSelectionFieldset')!.style.display = show ? 'none' : 'block';
+	$('noteOrderFieldset')!.style.display = show ? 'none' : 'block';
+	$('voiceSelectContainer')!.style.display = show ? 'none' : 'block';
+	$('elapsedPerThousand')!.style.display = show ? 'block' : 'none';
 }
 
 function $(id: string) {
