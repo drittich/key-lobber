@@ -301,7 +301,7 @@ function startKeyLobber(intervalSeconds: number) {
 		getKey(intervalSeconds * 1000)
 	}, intervalSeconds * 1000);
 
-	toggleLobbingButtonEl.innerHTML = "Stop Lobbing";
+	toggleLobbingButtonEl.innerHTML = "Stop";
 	keyIntervalInputEl.disabled = true;
 	toggleLobbingButtonEl.classList.add("secondary");
 }
@@ -312,7 +312,7 @@ function stopKeyLobber() {
 	clearInterval(timer);
 	clearInterval(bgTimer);
 
-	toggleLobbingButtonEl.innerHTML = "Start Lobbing";
+	toggleLobbingButtonEl.innerHTML = "Start";
 	keyIntervalInputEl.disabled = false;
 	toggleLobbingButtonEl.classList.remove("secondary");
 }
