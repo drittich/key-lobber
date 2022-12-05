@@ -28,6 +28,7 @@ let flatNotes = [
 ];
 
 let isLobbing = false;
+let currentKey = ["x", "x"];
 
 let enableSpeechCheckboxEl = $('enableSpeech') as HTMLInputElement;
 let flatNotesCheckboxEl = $("flatNotes") as HTMLInputElement;
@@ -293,6 +294,7 @@ function getVoiceFromLocalStorage() {
 
 let timer: number;
 function startKeyLobber(intervalSeconds: number) {
+	currentKey = ["x", "x"];
 	showKey(true);
 	getKey(intervalSeconds * 1000)
 
@@ -321,12 +323,44 @@ let bgTimer: number;
 let elapsedMs = 0;
 function getKey(intervalMs: number) {
 	clearInterval(bgTimer);
-	let key = getRandomKey();
-	keyValueEl.innerHTML = key[0];
+
+	let notes = getNotes();
+	let playingFirstNote:boolean = currentKey[0] == "x";
+
+	// get next key in sequence
+	if (playingFirstNote && noteOrderSelectEl.value != "random") {
+		let index = notes.findIndex(x => x[0] == startNoteSelectEl.value);
+		currentKey = notes[index];
+	}
+	else {
+		if (noteOrderSelectEl.value == "ascending") {
+			let index = notes.findIndex(x => x[0] == currentKey[0]);
+			if (index == notes.length - 1)
+				index = 0;
+			else
+				index++;
+			currentKey = notes[index];
+		}
+		// get next key in sequence
+		else if (noteOrderSelectEl.value == "descending") {
+			let index = notes.findIndex(x => x[0] == currentKey[0]);
+			if (index == 0)	
+				index = notes.length - 1;
+			else
+				index--;
+			currentKey = notes[index];
+		}
+		// get a random key
+		else {
+			currentKey = getRandomKey();
+		}
+	}
+
+	keyValueEl.innerHTML = currentKey[0];
 	elapsedMs = 0;
 
 	if (enableSpeechCheckboxEl.checked) {
-		let utterance = new SpeechSynthesisUtterance(key[1]);
+		let utterance = new SpeechSynthesisUtterance(currentKey[1]);
 		utterance.pitch = 1;
 		utterance.rate = .9;
 		utterance.volume = parseFloat(volumeInputEl.value);
@@ -339,7 +373,7 @@ function getKey(intervalMs: number) {
 		speechSynthesis.speak(utterance);
 	}
 
-	//slowly increase the background size until the next key is selected
+	//slowly increase the progress bar until the next key is selected
 	let frameMs = 10;
 	bgTimer = setInterval(frame, frameMs);
 	function frame() {
@@ -352,7 +386,6 @@ function getKey(intervalMs: number) {
 	}
 }
 
-let currentKey = ["C", "C"];
 function getRandomKey() {
 	var keys = getNotes();
 	let nextKey = null;
